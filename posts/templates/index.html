@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+    <div id='main_wrapper'>
+      <h1>{{title}}</h1>
+      {% for obj in object_list %}
+
+        <h4><a href='{% url "detail" id=obj.id %}'>{{obj.title}}</a></h4>
+        <h4>{{obj.content}}</h4>
+      {% endfor %}
+      {{object_list}}
+
+    </div>
+</body>
+
+
+</html>

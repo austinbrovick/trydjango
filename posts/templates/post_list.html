@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <h1>{{title}}</h1>
+    {% for obj in object_list %}
+    <div class='col-sm-6'>
+        <h4><a href='{% url "detail" id=obj.id %}'>{{obj.title}} :  {{obj.timestamp | timesince }} ago</a></h4>
+        {% if obj.image %}
+          <img src='{{ obj.image.url }}' class='img-responsive'>
+        {% endif %}
+        <h4>{{obj.content|linebreaks|truncatechars:120}}</h4>
+    </div>
+    {% endfor %}
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if object_list.has_previous %}
+            <a href="?page={{ object_list.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ object_list.number }} of {{ object_list.paginator.num_pages }}.
+        </span>
+
+        {% if object_list.has_next %}
+            <a href="?page={{ object_list.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+  </div>
+
+{% endblock content %}

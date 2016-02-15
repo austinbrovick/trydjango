@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+{{block.super}}
+<h1>Form</h1>
+<form action='' method='post' enctype='multipart/form-data'>
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type='submit' value='create post' />
+</form>
+
+
+{% endblock content %}

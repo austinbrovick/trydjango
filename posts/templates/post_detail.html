@@ -1,17 +1,27 @@
-
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-    <div id='main_wrapper'>
-      <h1>{{title}}</h1>
-        <h4>{{instance.title}}</h4>
-        <h4>{{instance.content}}</h4>
-
-    </div>
-</body>
+{% extends "base.html" %}
+{% block head_title %} {{instance.title}} | {{block.super}} {% endblock head_title %}
 
 
-</html>
+    <style>
+    {% block style %}
+
+
+    {% endblock style %}
+
+
+    </style>
+
+
+
+{% block content %}
+<div class='col-sm-6 col-sm-offset-3'>
+    {% if instance.image %}
+        <img src='{{ instance.image.url }}' class='img-responsive'>
+    {% endif %}
+    <h1>{{instance.title}} <small>{{instance.timestamp | timesince }}</small></h1>
+    <h4>{{instance.content}}</h4>
+</div>
+
+{% endblock content %}
+
+

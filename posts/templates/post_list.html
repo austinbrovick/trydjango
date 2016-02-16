@@ -5,10 +5,11 @@
     <h1>{{title}}</h1>
     {% for obj in object_list %}
     <div class='col-sm-6'>
-        <h4><a href='{% url "detail" id=obj.id %}'>{{obj.title}} :  {{obj.timestamp | timesince }} ago</a></h4>
+        <h4><a href='{% url "detail" id=obj.id %}'>{{obj.title}} :  {{obj.publish | timesince }}</a></h4>
         {% if obj.image %}
           <img src='{{ obj.image.url }}' class='img-responsive'>
         {% endif %}
+        {% if obj.user.get_full_name %}<h1>Author: {{ obj.user.get_full_name }}</h1>{% endif %}
         <h4>{{obj.content|linebreaks|truncatechars:120}}</h4>
     </div>
     {% endfor %}

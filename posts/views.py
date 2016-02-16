@@ -1,7 +1,8 @@
+from urllib import quote_plus
 from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 # get_object_or_404
 
 from django.core.urlresolvers import reverse
@@ -14,9 +15,18 @@ from .models import Post # imports Post schema
 
 
 def post_create(request):
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+
+
+    # if not request.user.is_authenticated():
+    #     raise Http404
+
+
     form = PostForm(request.POST or None, request.FILES or None) #initialize it with parenthesis
     if form.is_valid(): # if all the fields are valid, do something amazing !
         instance = form.save(commit=False)
+        instance.user = request.user
         instance.save()
         messages.success(request, "Sucessfully create")
         return HttpResponseRedirect(reverse("detail", kwargs={'id' : instance.id}))
@@ -28,10 +38,12 @@ def post_create(request):
 
 def post_detail(request, id=id): #id must match with the key word in the url, id and pk are best practices
     instance = get_object_or_404(Post, id=id) # get the instance, Post is the model
+    share_string = quote_plus(instance.content)
     # return HttpResponse("<h1>Detail</h1>")
     context = {
         "instance" : instance,
         "title" : instance.title,
+        "share_string" : share_string,
     }
     return render(request, "post_detail.html", context)
 
@@ -70,6 +82,10 @@ def listing(request):
 
 
 def post_update(request, id=None):
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+
+
     instance = get_object_or_404(Post, id=id) # get the instance, Post is the model
     form = PostForm(request.POST or None, request.FILES or None, instance=instance) #initialize it with parenthesis
     if form.is_valid(): # if all the fields are valid, do something amazing !
@@ -90,6 +106,10 @@ def post_update(request, id=None):
 
 
 def post_delete(request, id=None):
+    if not request.user.is_staff or not request.user.is_superuser:
+        raise Http404
+
+
     instance = get_object_or_404(Post, id=id)
     instance.delete()
     messages.success(request, "Successfully deleted")
